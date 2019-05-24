@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SyncAdapterApplication</string>
+    <string name="sync_account_type">"com.example.syncadapterapplication"</string>
+</resources>
