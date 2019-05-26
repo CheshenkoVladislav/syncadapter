@@ -13,4 +13,3 @@
 .externalNativeBuild
 Будет удалено libs/
 app/libs/
-gradle/
