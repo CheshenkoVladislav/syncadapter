@@ -1,4 +1,4 @@
-# syncadapter
+# Contacts syncing
 # Readme
 
 Синхронизация контактов реализуется только при авторизации пользователя в AccountManager, поэтому сначала добавляем аккаунт нашего приложения https://developer.android.com/training/id-auth/custom_auth 
