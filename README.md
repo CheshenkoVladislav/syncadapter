@@ -39,7 +39,7 @@ override fun onBind(intent: Intent?): IBinder? = syncAdapter?.syncAdapterBinder
         android:isAlwaysSyncable="true"
         android:userVisible="true" />
 ```
-В параметре contentAuthority указываем имя провайдера с которым мы хотим синзронизироваться, а в accountType тип аккаунта нашего приложения. Для получения детальной информации об остальных параметрах sync-adapter’а переходи по ссылке [ссылке](https://developer.android.com/training/sync-adapters/creating-sync-adapter)
+В параметре contentAuthority указываем имя провайдера с которым мы хотим синзронизироваться, а в accountType тип аккаунта нашего приложения. Для получения детальной информации об остальных параметрах sync-adapter’а переходи по [ссылке](https://developer.android.com/training/sync-adapters/creating-sync-adapter)
 
 Если мы синхронизируемся с книгой контактов, то нам так же потребуется описать структуру добавляемых полей в xml, для этого создаем файл contacts.xml 
 ```xml
@@ -54,7 +54,7 @@ override fun onBind(intent: Intent?): IBinder? = syncAdapter?.syncAdapterBinder
 
 </ContactsAccountType>
 ```
-Подробную информацию по доступным полям книги контактов можно найти тут   [тут](https://developer.android.com/guide/topics/providers/contacts-provider?hl=ru)
+Подробную информацию по доступным полям книги контактов можно найти [тут](https://developer.android.com/guide/topics/providers/contacts-provider?hl=ru)
 
 Завершающим шагом , опишем наш SyncService в манифесте с указанием нашего адаптера синхронизации :
 ```xml
