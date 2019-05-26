@@ -17,8 +17,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.example.syncadapterapplication.auth.AuthActivity
-import com.example.syncadapterapplication.syncservice.SyncService
-import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,9 +26,9 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "MainActivity"
     }
 
-    private val contactsManager = ContactsManager(this)
+    private val contactsManager = ContactsManager(contentResolver)
 
-    private lateinit var etPhone : EditText
+    private lateinit var etPhone: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,21 +52,15 @@ class MainActivity : AppCompatActivity() {
                 PackageManager.PERMISSION_GRANTED
             )
                 requestPermissions(
-                    arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.WRITE_SYNC_SETTINGS),
+                    arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS,
+                        Manifest.permission.WRITE_SYNC_SETTINGS),
                     PERMISSION_REQUEST_CODE
                 )
             else {
                 var account: Account? = null
                 AccountManager.get(this).accounts.forEach { if (it.type == AuthActivity.ACCOUNT_TYPE) account = it }
                 account?.let {
-                    // Set this account automatically sync
-                    // Set this account periodically sync with the specified interval
-//                    ContentResolver.addPeriodicSync(account, ContactsContract.AUTHORITY, Bundle.EMPTY, 1000000)
-
-//                    ContentResolver.setIsSyncable(it, ContactsContract.AUTHORITY, 1)
                     ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)
-
-                    //                    syncAdapterSync()
                 }
             }
         }
@@ -83,59 +75,18 @@ class MainActivity : AppCompatActivity() {
                 var account: Account? = null
                 AccountManager.get(this).accounts.forEach { if (it.type == AuthActivity.ACCOUNT_TYPE) account = it }
                 account?.let {
-                    // Set this account automatically sync
                     ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)
-
-                    // Set this account periodically sync with the specified interval
-                    //                    ContentResolver.addPeriodicSync(account, ContactsContract.AUTHORITY, Bundle.EMPTY, 1000000)
-
-//                    ContentResolver.setIsSyncable(it, ContactsContract.AUTHORITY, 1)
-                    //                    syncAdapterSync()
                 }
             }
         }
     }
 
-    private fun syncAdapterSync() {
-        val syncIntent = Intent(this, SyncService::class.java)
-        startService(syncIntent)
-    }
-
-    private fun startSync() {
-        Thread {
-            while (true) {
-                val contact = Contact("Test2")
-                try {
-                    Log.d(TAG, "Start sync")
-                    val accountManager = AccountManager.get(this)
-                    contactsManager.addContact(accountManager.accounts[0], this, contact)
-                    Log.d(TAG, "End sync")
-                } catch (exception: IOException) {
-                    Log.e(TAG, exception.message)
-                } finally {
-                    Thread.sleep(10000)
-                }
-            }
-        }.start()
-    }
-
-    private fun requestSync() {
-        val data = Bundle()
-        val authority = "vnd.android.cursor.item/com.example.syncadapterapplication"
-        data.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
-        data.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
-        ContentResolver.requestSync(AccountManager.get(this).accounts[0], authority, data)
-    }
-
     private fun modifyContact() {
-        val contact = Contact("Test2")
         val accountManager = AccountManager.get(this)
         Log.d(TAG, "Add contact")
         var account: Account? = null
         accountManager.accounts.forEach { if (it.type == AuthActivity.ACCOUNT_TYPE) account = it }
         account?.let {
-//            contactsManager.addContact(it, this, contact)
-//            ContentResolver.requestSync(it, ContactsContract.AUTHORITY, Bundle.EMPTY)
             contactsManager.addAccountFieldToContact(it, etPhone.text.toString())
         }
     }
