@@ -1,13 +1,13 @@
 # syncadapter
-Readme
+# Readme
 
 Синхронизация контактов реализуется только при авторизации пользователя в AccountManager, поэтому сначала добавляем аккаунт нашего приложения https://developer.android.com/training/id-auth/custom_auth 
 
-Далее создаем SyncAdapter и SyncService
+## Далее создаем SyncAdapter и SyncService
 
 SyncAdapter : класс в котором мы реализуем метод onPerformSync, в этом методе пишем всю нашу синхронизацию 
 (Запрос на сервер, затем проверка контактов в телефонной книге и добавление новых полей если есть совпадения), в сэмпле он пустой так как реальной синхронизации с сервером у нас нету . Далее пишем SyncService , Здесь важно в методе onCreate создать наш адаптер 
-!!!!Адаптер создается в synchronized блоке на каком то мониторе!!!! 
+!!!!Адаптер создается в synchronized блоке!!!! 
 ```kotlin
 override fun onCreate() {
     super.onCreate()
@@ -39,7 +39,7 @@ override fun onBind(intent: Intent?): IBinder? = syncAdapter?.syncAdapterBinder
         android:isAlwaysSyncable="true"
         android:userVisible="true" />
 ```
-В параметре contentAuthority указываем имя провайдера с которым мы хотим синзронизироваться, а в accountType тип аккаунта нашего приложения, остальные. Для получения детальной информации об остальных параметрах sync-adapter’а переходи по ссылке [I'm an inline-style link](https://developer.android.com/training/sync-adapters/creating-sync-adapter)
+В параметре contentAuthority указываем имя провайдера с которым мы хотим синзронизироваться, а в accountType тип аккаунта нашего приложения. Для получения детальной информации об остальных параметрах sync-adapter’а переходи по ссылке [ссылке](https://developer.android.com/training/sync-adapters/creating-sync-adapter)
 
 Если мы синхронизируемся с книгой контактов, то нам так же потребуется описать структуру добавляемых полей в xml, для этого создаем файл contacts.xml 
 ```xml
@@ -54,7 +54,7 @@ override fun onBind(intent: Intent?): IBinder? = syncAdapter?.syncAdapterBinder
 
 </ContactsAccountType>
 ```
-Подробную информацию по доступным полям книги контактов можно найти тут   [I'm an inline-style link](https://developer.android.com/guide/topics/providers/contacts-provider?hl=ru)
+Подробную информацию по доступным полям книги контактов можно найти тут   [тут](https://developer.android.com/guide/topics/providers/contacts-provider?hl=ru)
 
 Завершающим шагом , опишем наш SyncService в манифесте с указанием нашего адаптера синхронизации :
 ```xml
@@ -80,7 +80,7 @@ override fun onBind(intent: Intent?): IBinder? = syncAdapter?.syncAdapterBinder
 ```
 Теперь чтобы открыть нашу DefaultActivity из книги контактов , нам просто нужно добавить контакт с кастомным полем mimetype типа ‘vnd.android.cursor.item/com.example.syncadapterapplication’ туда же интентом нам придут все данные нашего контакта
 
-Важно добавить пермишены в манифест :
+## Важно добавить пермишены в манифест :
 ```xml
 <manifest>
 ...
@@ -101,7 +101,7 @@ ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)
 ```
 Тогда при изменениях в контактной книге будет вызываться наш адаптер синхронизации, так же пользователь может сам включить или выключить опцию автоматической синхронизации в настройках
 
-ВАЖНО, для того чтобы добавить наше поле к существующему контакту, наш контакт должен совпадать примерно на 70% с существующим контактом, либо нам нужно мертвить контакты вручную по id(как достать id контакта по номеру телефона смотри ContactsManager в сэмпле):
+# ВАЖНО, для того чтобы добавить наше поле к существующему контакту, наш контакт должен совпадать примерно на 70% с существующим контактом, либо нам нужно мертвить контакты вручную по id(как достать id контакта по номеру телефона смотри ContactsManager в сэмпле):
 ```kotlin
 op.add(ContentProviderOperation.newUpdate(ContactsContract.AggregationExceptions.CONTENT_URI)
     .withValue(ContactsContract.AggregationExceptions.TYPE,
