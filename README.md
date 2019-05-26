@@ -101,6 +101,16 @@ ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true)
 ```
 Тогда при изменениях в контактной книге будет вызываться наш адаптер синхронизации, так же пользователь может сам включить или выключить опцию автоматической синхронизации в настройках
 
+В сэмпле мы добавляем кастомное поле к контакту из приложения, если мы хотим редактировать контакт из адаптера синхронизации то добавим к Uri запроса, следующий параметр :
+```kotlin
+ private fun addCallerIsSyncAdapterParameter(uri: Uri, isSyncOperation: Boolean): Uri {
+        return if (isSyncOperation) {
+            uri.buildUpon()
+                .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
+                .build()
+        } else uri
+    }
+```
 ### ВАЖНО, для того чтобы добавить наше поле к существующему контакту, наш контакт должен совпадать примерно на 70% с существующим контактом, либо нам нужно мерджить контакты вручную по id(как достать id контакта по номеру телефона смотри ContactsManager в сэмпле):
 ```kotlin
 op.add(ContentProviderOperation.newUpdate(ContactsContract.AggregationExceptions.CONTENT_URI)
